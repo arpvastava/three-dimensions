@@ -1,5 +1,6 @@
 import { PerspectiveCamera, Scene, WebGLRenderer } from "three"
 import { Player } from "./classes/Player"
+import { Ground } from "./classes/Ground"
 
 export class Game {
     private container: HTMLDivElement
@@ -11,6 +12,7 @@ export class Game {
 
     private lastTime: number = 0
     private player: Player | null = null
+    private ground: Ground | null = null
 
     constructor(container: HTMLDivElement) {
         this.container = container
@@ -54,7 +56,11 @@ export class Game {
 
     setup() {
         // Set camera position
-        this.camera.position.z = 5
+        this.camera.position.set(0, 1, 5)
+
+        // Create ground
+        this.ground = new Ground(this.scene)
+        this.ground.setup()
 
         // Create player
         this.player = new Player(this.scene)
@@ -71,6 +77,7 @@ export class Game {
             this.lastTime = time
 
             // Main Loop
+            this.ground?.update(delta)
             this.player?.update(delta)
 
             // Render
@@ -83,6 +90,7 @@ export class Game {
         window.removeEventListener("resize", this.handleScreenResize)
 
         // Remove game objects
+        this.ground?.destroy()
         this.player?.destroy()
 
         // Disable and remove renderer

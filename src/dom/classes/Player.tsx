@@ -10,17 +10,17 @@ export class Player {
 
     setup() {
         const geometry = new BoxGeometry(1, 1, 1)
-        const material = new MeshBasicMaterial({ color: "skyblue" })
+        const material = new MeshBasicMaterial({ color: "#ff6969" })
+        
         this.player = new Mesh(geometry, material)
+        this.player.position.set(0, 0, 0)
+        
         this.scene.add(this.player)
     }
 
-    update(delta: number) {
+    update(_delta: number) {
         if (!this.player)
             return
-
-        this.player.rotation.x += 1 * delta
-        this.player.rotation.y += 1 * delta
     }
 
     destroy() {
