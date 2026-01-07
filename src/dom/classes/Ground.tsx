@@ -6,6 +6,8 @@ export class Ground {
     dimensions = { length: 10, breadth: 1000 }
     texTileSize: number = 0.5
 
+    speed: number = 2.5
+
     constructor(scene: Scene) {
         this.scene = scene
     }
@@ -27,8 +29,16 @@ export class Ground {
         this.scene.add(this.ground)
     }
 
-    update(_delta: number) {
+    update(delta: number) {
+        if (!this.ground)
+            return
 
+        const material = this.ground.material as MeshStandardMaterial
+        const map = material.map
+        if (!map)
+            return
+
+        map.offset.y = (map.offset.y + (this.speed * delta)) % 1
     }
 
     destroy() {
