@@ -1,6 +1,7 @@
 import { AmbientLight, DirectionalLight, FogExp2, PerspectiveCamera, Scene, WebGLRenderer } from "three"
 import { Player } from "./classes/Player"
 import { Ground } from "./classes/Ground"
+import { Obstacle } from "./classes/Obstacle"
 
 export class Game {
     private container: HTMLDivElement
@@ -13,6 +14,7 @@ export class Game {
     private lastTime: number = 0
     private player: Player | null = null
     private ground: Ground | null = null
+    private obstacle: Obstacle | null = null
 
     constructor(container: HTMLDivElement) {
         this.container = container
@@ -62,7 +64,7 @@ export class Game {
         dirLight.position.set(0, 10, 0)
         this.scene.add(dirLight)
 
-        this.scene.fog = new FogExp2("#111111", 0.03)
+        this.scene.fog = new FogExp2("#111111", 0.06)
         this.renderer.setClearColor(this.scene.fog.color)
     }
 
@@ -81,6 +83,10 @@ export class Game {
         this.player = new Player(this.scene)
         this.player.setup()
 
+        // Create obstacle
+        this.obstacle = new Obstacle(this.scene)
+        this.obstacle.setup()
+
         // Render
         this.renderer.render(this.scene, this.camera)
     }
@@ -94,6 +100,7 @@ export class Game {
             // Main Loop
             this.ground?.update(delta)
             this.player?.update(delta)
+            this.obstacle?.update(delta)
 
             // Render
             this.renderer.render(this.scene, this.camera)
@@ -107,6 +114,7 @@ export class Game {
         // Remove game objects
         this.ground?.destroy()
         this.player?.destroy()
+        this.obstacle?.destroy()
 
         // Remove scene and camera
         this.scene.clear()
