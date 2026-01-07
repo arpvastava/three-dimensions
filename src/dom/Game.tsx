@@ -1,7 +1,7 @@
 import { AmbientLight, DirectionalLight, FogExp2, PerspectiveCamera, Scene, WebGLRenderer } from "three"
 import { Player } from "./classes/Player"
 import { Ground } from "./classes/Ground"
-import { Obstacle } from "./classes/Obstacle"
+import { ObstaclesManager } from "./classes/ObstaclesManager"
 
 export class Game {
     private container: HTMLDivElement
@@ -14,7 +14,7 @@ export class Game {
     private lastTime: number = 0
     private player: Player | null = null
     private ground: Ground | null = null
-    private obstacle: Obstacle | null = null
+    private obstaclesManager: ObstaclesManager | null = null
 
     constructor(container: HTMLDivElement) {
         this.container = container
@@ -83,9 +83,9 @@ export class Game {
         this.player = new Player(this.scene)
         this.player.setup()
 
-        // Create obstacle
-        this.obstacle = new Obstacle(this.scene)
-        this.obstacle.setup()
+        // Create obstacles manager
+        this.obstaclesManager = new ObstaclesManager(this.scene, this.player)
+        this.obstaclesManager.setup()
 
         // Render
         this.renderer.render(this.scene, this.camera)
@@ -99,8 +99,8 @@ export class Game {
 
             // Main Loop
             this.ground?.update(delta)
+            this.obstaclesManager?.update(delta)
             this.player?.update(delta)
-            this.obstacle?.update(delta)
 
             // Render
             this.renderer.render(this.scene, this.camera)
@@ -113,8 +113,8 @@ export class Game {
 
         // Remove game objects
         this.ground?.destroy()
+        this.obstaclesManager?.destroy()
         this.player?.destroy()
-        this.obstacle?.destroy()
 
         // Remove scene and camera
         this.scene.clear()
