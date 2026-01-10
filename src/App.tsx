@@ -2,12 +2,15 @@ import './App.css'
 import { useEffect, useRef } from 'react'
 import { Game } from './dom/Game'
 import { useGameControls, useGameState } from './state'
+import { useGameScore } from './state/useGameState'
 
 function App() {
     const gameRef = useRef<Game | null>(null)
     const gameContainerRef = useRef<HTMLDivElement>(null)
 
     const state = useGameState()
+    const score = useGameScore()
+    const scoreDisplay = Math.floor(score)
     const { startGame } = useGameControls()
 
     // Create game instance
@@ -42,9 +45,16 @@ function App() {
                     </div>
                 )}
 
+                {state === "playing" && (
+                    <div className="playing">
+                        <p className="score">{scoreDisplay}</p>
+                    </div>
+                )}
+
                 {state === "resultMenu" && (
                     <div className="result-menu">
                         <button className="action-btn" onClick={startGame}>Restart</button>
+                        <p className="score">{scoreDisplay}</p>
                     </div>
                 )}
             </div>

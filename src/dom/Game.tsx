@@ -111,6 +111,11 @@ export class Game {
 
             if (this.stateManager.getState() === "playing") {
                 this.obstaclesManager?.update(delta)
+
+                // Update score
+                this.stateManager.setScore(
+                    this.stateManager.getScore() + (1 * delta)
+                )
             }
 
             this.player?.update(delta)
@@ -141,6 +146,10 @@ export class Game {
 
     // Event handling methods
     private onStateChange = (state: GameState) => {
+        if (state === "playing") {
+            this.stateManager.setScore(0)
+        }
+
         if (state === "playing" && this.player && this.player.isActive === false) {
             this.player.setup()
         }

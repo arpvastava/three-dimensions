@@ -2,6 +2,7 @@ export type GameState = "startMenu" | "playing" | "paused" | "resultMenu"
 
 type GameEvents = {
     stateChange: GameState
+    scoreChange: number
 }
 
 type EventListener<T> = (data: T) => void
@@ -9,6 +10,7 @@ type EventListener<T> = (data: T) => void
 export class StateManager {
     private static instance: StateManager | null = null
     private state: GameState = "startMenu"
+    private score: number = 0
     private listeners: Map<keyof GameEvents, Set<EventListener<any>>> = new Map()
 
     constructor() {
@@ -62,5 +64,14 @@ export class StateManager {
     setState(newState: GameState): void {
         this.state = newState
         this.emit("stateChange", this.state)
+    }
+
+    getScore(): number {
+        return this.score
+    }
+
+    setScore(newScore: number): void {
+        this.score = newScore
+        this.emit("scoreChange", this.score)
     }
 }

@@ -15,6 +15,19 @@ export function useGameState() {
     return useSyncExternalStore(subscribe, getSnapshot)
 }
 
+export function useGameScore() {
+    const manager = StateManager.getInstance()
+
+    const subscribe = (callback: () => void) => {
+        manager.on("scoreChange", callback)
+        return () => manager.off("scoreChange", callback)
+    }
+
+    const getSnapshot = () => manager.getScore()
+
+    return useSyncExternalStore(subscribe, getSnapshot)
+}
+
 export function useGameControls() {
     const manager = StateManager.getInstance()
 
