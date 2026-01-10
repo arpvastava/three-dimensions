@@ -3,6 +3,7 @@ export type GameState = "startMenu" | "playing" | "paused" | "resultMenu"
 type GameEvents = {
     stateChange: GameState
     scoreChange: number
+    highscoreChange: number
 }
 
 type EventListener<T> = (data: T) => void
@@ -11,6 +12,7 @@ export class StateManager {
     private static instance: StateManager | null = null
     private state: GameState = "startMenu"
     private score: number = 0
+    private highscore: number = 0
     private listeners: Map<keyof GameEvents, Set<EventListener<any>>> = new Map()
 
     constructor() {
@@ -73,5 +75,15 @@ export class StateManager {
     setScore(newScore: number): void {
         this.score = newScore
         this.emit("scoreChange", this.score)
+
+        // Update highscore if score is higher
+        if (this.score > this.highscore) {
+            this.highscore = this.score
+            this.emit("highscoreChange", this.highscore)
+        }
+    }
+
+    getHighscore(): number {
+        return this.highscore
     }
 }

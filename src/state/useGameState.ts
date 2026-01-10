@@ -1,4 +1,4 @@
-import { useSyncExternalStore } from "react";
+import { useEffect, useSyncExternalStore } from "react";
 import { StateManager } from "./StateManager";
 
 
@@ -28,6 +28,19 @@ export function useGameScore() {
     return useSyncExternalStore(subscribe, getSnapshot)
 }
 
+export function useGameHighscore() {
+    const manager = StateManager.getInstance()
+
+    const subscribe = (callback: () => void) => {
+        manager.on("highscoreChange", callback)
+        return () => manager.off("highscoreChange", callback)
+    }
+
+    const getSnapshot = () => manager.getHighscore()
+
+    return useSyncExternalStore(subscribe, getSnapshot)
+}
+
 export function useGameControls() {
     const manager = StateManager.getInstance()
 
@@ -41,4 +54,18 @@ export function useGameControls() {
         endGame: () => manager.setState("resultMenu"),
         returnToStartMenu: () => manager.setState("startMenu")
     }
+}
+
+// Hook to listen for specific game events
+export function useGameEvent<K extends "stateChange" | "highscoreChange">(
+    event: K,
+    callback: () => void
+) {
+    const manager = StateManager.getInstance()
+
+    useEffect(() => {
+        manager.on(event, callback)
+        return () => manager.off(event, callback)
+
+    }, [event, callback])
 }

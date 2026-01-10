@@ -1,8 +1,8 @@
 import './App.css'
-import { useEffect, useRef } from 'react'
+import { useEffect, useRef, useState } from 'react'
 import { Game } from './dom/Game'
 import { useGameControls, useGameState } from './state'
-import { useGameScore } from './state/useGameState'
+import { useGameEvent, useGameHighscore, useGameScore } from './state/useGameState'
 
 function App() {
     const gameRef = useRef<Game | null>(null)
@@ -11,7 +11,13 @@ function App() {
     const state = useGameState()
     const score = useGameScore()
     const scoreDisplay = Math.floor(score)
+    const highscore = useGameHighscore()
+    const highscoreDisplay = Math.floor(highscore)
+
     const { startGame } = useGameControls()
+
+    // UI states
+    const [isNewHighscore, setIsNewHighscore] = useState(false)
 
     // Create game instance
     useEffect(() => {
@@ -26,6 +32,17 @@ function App() {
         }
 
     }, [])
+
+    // Listen for game events
+    useGameEvent(("stateChange"), () => {
+        if (state === "playing") {
+            setIsNewHighscore(false)
+        }
+    })
+
+    useGameEvent(("highscoreChange"), () => {
+        setIsNewHighscore(true)
+    })
 
     return (
         <>
@@ -42,6 +59,7 @@ function App() {
                 {state === "startMenu" && (
                     <div className="main-menu">
                         <button className="action-btn" onClick={startGame}>Start</button>
+                        <p className="highscore">🏆 {highscoreDisplay}</p>
                     </div>
                 )}
 
@@ -54,7 +72,15 @@ function App() {
                 {state === "resultMenu" && (
                     <div className="result-menu">
                         <button className="action-btn" onClick={startGame}>Restart</button>
-                        <p className="score">{scoreDisplay}</p>
+                        {
+                            isNewHighscore ?
+                                <>
+                                    <p className="score-result">🏆 {scoreDisplay}</p>
+                                    <p className="highscore-message">New highscore!</p>
+                                </>
+                                :
+                                <p className="score-result">⭐ {scoreDisplay}</p>
+                        }
                     </div>
                 )}
             </div>
