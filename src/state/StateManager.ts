@@ -1,3 +1,5 @@
+import { AudioManager } from "../dom/Audio/AudioManager"
+
 export type GameState = "startMenu" | "playing" | "paused" | "resultMenu"
 
 type GameEvents = {
@@ -13,6 +15,7 @@ export class StateManager {
     private state: GameState = "startMenu"
     private score: number = 0
     private highscore: number = 0
+    private isBgmStarted: boolean = false
     private listeners: Map<keyof GameEvents, Set<EventListener<any>>> = new Map()
 
     constructor() {
@@ -85,5 +88,13 @@ export class StateManager {
 
     getHighscore(): number {
         return this.highscore
+    }
+
+    startBGM() {
+        if (this.isBgmStarted)
+            return
+
+        AudioManager.getInstance().playLoop("main")
+        this.isBgmStarted = true
     }
 }

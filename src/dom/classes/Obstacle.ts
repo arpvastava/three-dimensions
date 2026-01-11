@@ -1,6 +1,7 @@
 import { Box3, BoxGeometry, Mesh, MeshStandardMaterial, Scene, Vector3 } from "three";
 import type { Player } from "./Player";
 import { StateManager } from "../../state";
+import { AudioManager } from "../Audio/AudioManager";
 
 export class Obstacle {
     obstacle: Mesh | null = null
@@ -43,6 +44,7 @@ export class Obstacle {
 
         // Check collision with player
         if (this.player.boundingBox && this.boundingBox.intersectsBox(this.player.boundingBox)) {
+            AudioManager.getInstance().playOneShot("collided")
             this.player.destroy()
             StateManager.getInstance().setState("resultMenu")
         }

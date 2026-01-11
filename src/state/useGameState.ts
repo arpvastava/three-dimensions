@@ -48,6 +48,7 @@ export function useGameControls() {
         startGame: () => {
             manager.reset()
             manager.setState("playing")
+            manager.startBGM()
         },
         pauseGame: () => manager.setState("paused"),
         resumeGame: () => manager.setState("playing"),

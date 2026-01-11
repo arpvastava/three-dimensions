@@ -3,6 +3,7 @@ import { useEffect, useRef, useState } from 'react'
 import { Game } from './dom/Game'
 import { useGameControls, useGameState } from './state'
 import { useGameEvent, useGameHighscore, useGameScore } from './state/useGameState'
+import { AudioManager } from './dom/Audio/AudioManager'
 
 function App() {
     const gameRef = useRef<Game | null>(null)
@@ -21,14 +22,21 @@ function App() {
 
     // Create game instance
     useEffect(() => {
-        const game = new Game(gameContainerRef.current!)
-        gameRef.current = game
-        game.setup()
-        game.loop()
+        const startGame = async () => {
+            const game = new Game(gameContainerRef.current!)
+            gameRef.current = game
+
+            await game.setup()
+            game.loop()
+        }
+
+        startGame()
 
         return () => {
-            game.destroy()
-            gameRef.current = null
+            if (gameRef.current) {
+                gameRef.current.destroy()
+                gameRef.current = null
+            }
         }
 
     }, [])
@@ -44,6 +52,12 @@ function App() {
         setIsNewHighscore(true)
     })
 
+    // React event handlers
+    function onStartOrRestart() {
+        startGame()
+        AudioManager.getInstance().playOneShot("click")
+    }
+
     return (
         <>
             <div
@@ -58,7 +72,7 @@ function App() {
             <div className="ui">
                 {state === "startMenu" && (
                     <div className="main-menu">
-                        <button className="action-btn" onClick={startGame}>Start</button>
+                        <button className="action-btn" onClick={onStartOrRestart}>Start</button>
                         <p className="highscore">🏆 {highscoreDisplay}</p>
                     </div>
                 )}
@@ -71,7 +85,7 @@ function App() {
 
                 {state === "resultMenu" && (
                     <div className="result-menu">
-                        <button className="action-btn" onClick={startGame}>Restart</button>
+                        <button className="action-btn" onClick={onStartOrRestart}>Restart</button>
                         {
                             isNewHighscore ?
                                 <>

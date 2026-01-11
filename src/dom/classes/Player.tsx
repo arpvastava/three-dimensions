@@ -1,4 +1,5 @@
 import { Box3, BoxGeometry, Mesh, MeshStandardMaterial, Scene, Vector3 } from "three";
+import { AudioManager } from "../Audio/AudioManager";
 
 export class Player {
     isActive: boolean = false
@@ -91,6 +92,8 @@ export class Player {
             else if (this.targetX === 0) {
                 this.targetX = -this.moveDistance
             }
+
+            AudioManager.getInstance().playOneShot("move")
         }
         else if (key === "d" || key === "ArrowRight") {
             if (this.targetX === -this.moveDistance) {
@@ -99,6 +102,8 @@ export class Player {
             else if (this.targetX === 0) {
                 this.targetX = this.moveDistance
             }
+
+            AudioManager.getInstance().playOneShot("move")
         }
     }
 }
