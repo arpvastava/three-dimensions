@@ -5,10 +5,12 @@ import { ObstaclesManager } from "./classes/ObstaclesManager"
 import { StateManager } from "../state"
 import type { GameState } from "../state/StateManager"
 import { AudioManager } from "./Audio/AudioManager"
+import { TextureManager } from "./Assets/TextureManager"
 
 export class Game {
     private stateManager: StateManager
     private audioManager: AudioManager
+    private textureManager: TextureManager
 
     private container: HTMLDivElement
     private width: number
@@ -28,6 +30,7 @@ export class Game {
         // Setup managers
         this.stateManager = StateManager.getInstance()
         this.audioManager = AudioManager.getInstance()
+        this.textureManager = TextureManager.getInstance()
 
         // Set width and height
         this.width = window.innerWidth
@@ -85,8 +88,9 @@ export class Game {
         // Set camera position
         this.camera.position.set(0, 2, 5)
 
-        // Load audios and play bgm
+        // Load assets
         await this.audioManager.setup(this.camera)
+        await this.textureManager.setup()
 
         // Create ground
         this.ground = new Ground(this.scene)

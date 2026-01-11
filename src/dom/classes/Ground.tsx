@@ -1,4 +1,5 @@
-import { BoxGeometry, Mesh, MeshStandardMaterial, RepeatWrapping, TextureLoader, type Scene } from "three";
+import { BoxGeometry, Mesh, MeshStandardMaterial, RepeatWrapping, type Scene } from "three";
+import { TextureManager } from "../Assets/TextureManager";
 
 export class Ground {
     ground: Mesh | null = null
@@ -13,8 +14,7 @@ export class Ground {
     }
 
     setup() {
-        const loader = new TextureLoader()
-        const texture = loader.load("/textures/kenney_prototype/texture_08.png")
+        const texture = TextureManager.getInstance().getTexture("ground")!
         texture.wrapS = RepeatWrapping
         texture.wrapT = RepeatWrapping
         texture.repeat.set(
