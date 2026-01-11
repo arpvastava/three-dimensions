@@ -124,18 +124,20 @@ export class Game {
             this.lastTime = time
 
             // Main Loop
-            this.ground?.update(delta)
+            if (this.stateManager.getState() !== "paused") {
+                this.ground?.update(delta)
 
-            if (this.stateManager.getState() === "playing") {
-                this.obstaclesManager?.update(delta)
+                if (this.stateManager.getState() === "playing") {
+                    this.obstaclesManager?.update(delta)
 
-                // Update score
-                this.stateManager.setScore(
-                    this.stateManager.getScore() + (1 * delta)
-                )
+                    // Update score
+                    this.stateManager.setScore(
+                        this.stateManager.getScore() + (1 * delta)
+                    )
+                }
+
+                this.player?.update(delta)
             }
-
-            this.player?.update(delta)
 
             // Render
             this.renderer.render(this.scene, this.camera)
@@ -165,10 +167,6 @@ export class Game {
 
     // Event handling methods
     private onStateChange = (state: GameState) => {
-        if (state === "playing") {
-            this.stateManager.setScore(0)
-        }
-
         if (state === "playing" && this.player && this.player.isActive === false) {
             this.player.setup()
         }

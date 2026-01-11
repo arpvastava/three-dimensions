@@ -94,6 +94,26 @@
     color: white;
 }
 
+.pause-btn {
+    position: absolute;
+    top: 24px;
+    right: 24px;
+
+    color: white;
+    font-size: 2.5rem;
+}
+
+
+
+.pause-menu {
+    width: 100%;
+
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    align-items: center;
+}
+
 
 
 .result-menu {

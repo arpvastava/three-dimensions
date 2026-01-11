@@ -102,7 +102,7 @@ export class ObstaclesManager {
     }
 
     private onStateChange = (state: GameState) => {
-        if (state !== "playing") {
+        if (state !== "playing" && state !== "paused") {
             this.initiateReset()
         }
     }

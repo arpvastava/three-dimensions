@@ -5,6 +5,7 @@ import { useGameControls, useGameState } from './state'
 import { useGameEvent, useGameHighscore, useGameScore } from './state/useGameState'
 import { AudioManager } from './dom/AssetManagers/AudioManager'
 import { LuLoader } from 'react-icons/lu'
+import { PiPause } from 'react-icons/pi'
 
 function App() {
     const gameRef = useRef<Game | null>(null)
@@ -16,14 +17,14 @@ function App() {
     const highscore = useGameHighscore()
     const highscoreDisplay = Math.floor(highscore)
 
-    const { startGame } = useGameControls()
+    const { startGame, pauseGame, resumeGame } = useGameControls()
 
     // UI states
     const [isNewHighscore, setIsNewHighscore] = useState(false)
 
     // Create game instance
     useEffect(() => {
-        const startGame = async () => {
+        const initGame = async () => {
             const game = new Game(gameContainerRef.current!)
             gameRef.current = game
 
@@ -31,7 +32,7 @@ function App() {
             game.loop()
         }
 
-        startGame()
+        initGame()
 
         return () => {
             if (gameRef.current) {
@@ -56,6 +57,11 @@ function App() {
     // React event handlers
     function onStartOrRestart() {
         startGame()
+        AudioManager.getInstance().playOneShot("click")
+    }
+
+    function onResume() {
+        resumeGame()
         AudioManager.getInstance().playOneShot("click")
     }
 
@@ -87,6 +93,15 @@ function App() {
                 {state === "playing" && (
                     <div className="playing">
                         <p className="score">{scoreDisplay}</p>
+                        <div className="pause-btn" onClick={pauseGame}>
+                            <PiPause />
+                        </div>
+                    </div>
+                )}
+
+                {state === "paused" && (
+                    <div className="pause-menu">
+                        <button className="action-btn" onClick={onResume}>Resume</button>
                     </div>
                 )}
 
