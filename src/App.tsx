@@ -84,14 +84,14 @@ function App() {
                 )}
 
                 {state === "startMenu" && (
-                    <div className="main-menu">
+                    <div className="menu">
                         <button className="action-btn" onClick={onStartOrRestart}>Start</button>
                         <p className="highscore">🏆 {highscoreDisplay}</p>
                     </div>
                 )}
 
                 {state === "playing" && (
-                    <div className="playing">
+                    <div className="menu">
                         <p className="score">{scoreDisplay}</p>
                         <div className="pause-btn" onClick={pauseGame}>
                             <PiPause />
@@ -100,13 +100,13 @@ function App() {
                 )}
 
                 {state === "paused" && (
-                    <div className="pause-menu">
+                    <div className="menu">
                         <button className="action-btn" onClick={onResume}>Resume</button>
                     </div>
                 )}
 
                 {state === "resultMenu" && (
-                    <div className="result-menu">
+                    <div className="menu">
                         <button className="action-btn" onClick={onStartOrRestart}>Restart</button>
                         {
                             isNewHighscore ?
