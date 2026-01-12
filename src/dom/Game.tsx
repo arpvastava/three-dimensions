@@ -69,6 +69,9 @@ export class Game {
         // Update renderer
         this.renderer.setSize(this.width, this.height)
         this.renderer.render(this.scene, this.camera)
+
+        // Adjust camera position as per current screen size
+        this.handleCameraPosition()
     }
 
     private handleVisibilityChange = () => {
@@ -94,7 +97,7 @@ export class Game {
         this.setupEnvironment()
 
         // Set camera position
-        this.camera.position.set(0, 2, 5)
+        this.handleCameraPosition()
 
         // Load assets
         await this.audioManager.setup(this.camera)
@@ -177,6 +180,20 @@ export class Game {
     private onStateChange = (state: GameState) => {
         if (state === "playing" && this.player && this.player.isActive === false) {
             this.player.setup()
+        }
+    }
+
+    // Other methods
+    private handleCameraPosition = () => {
+        const aspectRatio = this.width / this.height
+
+        // For landscape orientation
+        if (aspectRatio >= 1.02) {
+            this.camera.position.set(0, 2, 5)
+        }
+        // For portrait orientation
+        else {
+            this.camera.position.set(0, 4, 12)
         }
     }
 }
