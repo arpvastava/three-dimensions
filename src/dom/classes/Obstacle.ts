@@ -21,7 +21,7 @@ export class Obstacle {
         const geometry = new BoxGeometry(1, 1, 1)
         const material = new MeshStandardMaterial({ color: "skyblue" })
         this.obstacle = new Mesh(geometry, material)
-        this.obstacle.position.set(xPos, 1, -50)
+        this.obstacle.position.set(xPos, 1, -80)
 
         this.scene.add(this.obstacle)
 

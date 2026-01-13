@@ -70,8 +70,9 @@ export class Game {
         this.renderer.setSize(this.width, this.height)
         this.renderer.render(this.scene, this.camera)
 
-        // Adjust camera position as per current screen size
-        this.handleCameraPosition()
+        // Adjust other properties as per current screen size
+        this.setCamPosAsPerAR()
+        this.setFogDensityAsPerAR()
     }
 
     private handleVisibilityChange = () => {
@@ -88,8 +89,8 @@ export class Game {
         dirLight.position.set(0, 10, 0)
         this.scene.add(dirLight)
 
-        this.scene.fog = new FogExp2("#111111", 0.06)
-        this.renderer.setClearColor(this.scene.fog.color)
+        this.setFogDensityAsPerAR()
+        this.renderer.setClearColor(this.scene.fog?.color ?? "#ffffff")
     }
 
     async setup() {
@@ -97,7 +98,7 @@ export class Game {
         this.setupEnvironment()
 
         // Set camera position
-        this.handleCameraPosition()
+        this.setCamPosAsPerAR()
 
         // Load assets
         await this.audioManager.setup(this.camera)
@@ -184,7 +185,7 @@ export class Game {
     }
 
     // Other methods
-    private handleCameraPosition = () => {
+    private setCamPosAsPerAR = () => {
         const aspectRatio = this.width / this.height
 
         // For landscape orientation
@@ -194,6 +195,19 @@ export class Game {
         // For portrait orientation
         else {
             this.camera.position.set(0, 4, 12)
+        }
+    }
+
+    private setFogDensityAsPerAR = () => {
+        const aspectRatio = this.width / this.height
+
+        // For landscape orientation
+        if (aspectRatio >= 1.02) {
+            this.scene.fog = new FogExp2("#111111", 0.06)
+        }
+        // For portrait orientation
+        else {
+            this.scene.fog = new FogExp2("#111111", 0.02)
         }
     }
 }
