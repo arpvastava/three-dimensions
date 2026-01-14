@@ -10,6 +10,10 @@ type GameEvents = {
 
 type EventListener<T> = (data: T) => void
 
+type UserProgress = {
+    highscore: number
+}
+
 export class StateManager {
     private static instance: StateManager | null = null
     private state: GameState = "loading"
@@ -19,7 +23,7 @@ export class StateManager {
     private listeners: Map<keyof GameEvents, Set<EventListener<any>>> = new Map()
 
     constructor() {
-
+        this.loadProgress()
     }
 
     // -------------------------------------------------Event System-------------------------------------------------
@@ -53,6 +57,20 @@ export class StateManager {
         this.listeners.clear()
     }
 
+    // -------------------------------------------------Save/Load-------------------------------------------------
+    private saveProgress(): void {
+        const progress: UserProgress = { highscore: this.highscore }
+        localStorage.setItem("progress", JSON.stringify(progress))
+    }
+
+    private loadProgress(): void {
+        const loadedProgress = localStorage.getItem("progress")
+        if (loadedProgress) {
+            const progress = JSON.parse(loadedProgress) as UserProgress
+            this.highscore = progress.highscore
+        }
+    }
+
     // -------------------------------------------------Methods-------------------------------------------------
     static getInstance(): StateManager {
         if (!StateManager.instance) {
@@ -83,6 +101,9 @@ export class StateManager {
         if (this.score > this.highscore) {
             this.highscore = this.score
             this.emit("highscoreChange", this.highscore)
+
+            // Save progress
+            this.saveProgress()
         }
     }
 
