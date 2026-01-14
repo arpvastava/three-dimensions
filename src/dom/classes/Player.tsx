@@ -140,9 +140,22 @@ export class Player {
 
         // Move player if drag distance is larger than min limit
         const dragDistance = this.touchEndX - this.touchStartX
+
+        // Swipe
         if (Math.abs(dragDistance) > this.dragMinDistance) {
             const dir = dragDistance < 0 ? "left" : "right"
             this.movePlayer(dir)
+        }
+        // Tap
+        else {
+            const screenMid = window.innerWidth / 2
+
+            if (this.touchEndX < screenMid) {
+                this.movePlayer("left")
+            }
+            else {
+                this.movePlayer("right")
+            }
         }
     }
 }
