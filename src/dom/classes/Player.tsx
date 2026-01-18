@@ -37,7 +37,7 @@ export class Player {
         this.boundingBox = new Box3().setFromObject(this.player)
 
         // Add player movement
-        this.canvas.addEventListener("keydown", this.onKeyPress)
+        window.addEventListener("keydown", this.onKeyPress)
         this.canvas.addEventListener("touchstart", this.handleTouchStart)
         this.canvas.addEventListener("touchend", this.handleTouchEnd)
 
@@ -67,7 +67,7 @@ export class Player {
             return
 
         // Remove event listeners
-        this.canvas.removeEventListener("keydown", this.onKeyPress)
+        window.removeEventListener("keydown", this.onKeyPress)
         this.canvas.removeEventListener("touchstart", this.handleTouchStart)
         this.canvas.removeEventListener("touchend", this.handleTouchEnd)
 
