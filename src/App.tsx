@@ -119,9 +119,9 @@ function App() {
                 {state === "playing" && (
                     <div className="menu">
                         <p className="score">{scoreDisplay}</p>
-                        <div className="pause-btn" onClick={onPause}>
+                        <button className="pause-btn" onClick={onPause}>
                             <PiPause />
-                        </div>
+                        </button>
                     </div>
                 )}
 
